@@ -23,6 +23,7 @@ function handleAction(
 
   if (methodName == "resolve_purchase") {
     for (let logIndex = 0; logIndex < outcome.logs.length; logIndex++) {
+      const argsLog = functionCall.args.toString()
       const outcomeLog = outcome.logs[logIndex].toString()
 
       log.info("outcomeLog {}", [outcomeLog])
@@ -31,8 +32,13 @@ function handleAction(
       const jsonObject = jsonData.value.toObject()
       const purchaseObject = jsonObject.get("params")
 
-      if (purchaseObject) {
+      const argsData = json.try_fromString(argsLog)
+      const argsJson = argsData.value.toObject()
+      const agrsObject = argsJson.get("market_data")
+
+      if (purchaseObject && agrsObject) {
         const purchaseLogObject = purchaseObject.toObject()
+        const argsLogObject = agrsObject.toObject()
 
         const nftContractIdJson = purchaseLogObject.get("nft_contract_id")
         const ownerIdJson = purchaseLogObject.get("owner_id")
