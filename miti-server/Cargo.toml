@@ -1,0 +1,12 @@
+[package]
+name = "miti-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "4"
+actix-cors = "0.6.3"
+graphql_client = "0.11.0"
+reqwest = "0.11.12"
