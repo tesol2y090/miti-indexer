@@ -2,12 +2,20 @@ use actix_cors::Cors;
 use actix_web::{
     get,
     web::{self},
-    App, HttpServer, Responder,
+    App, HttpServer, Responder, Result,
 };
 
-#[get("/hello/{name}")]
-async fn greet(name: web::Path<String>) -> impl Responder {
-    format!("Hello {name}!")
+mod services;
+
+use crate::services::gql::mintbase_gql_client::get_sale_volume;
+
+#[get("/get_volume")]
+async fn greet() -> Result<impl Responder> {
+    let date = "2022-10-20".to_string();
+    let kind = "sale".to_string();
+
+    let volume = get_sale_volume(date, kind).await.unwrap();
+    Ok(web::Json(volume))
 }
 
 #[actix_web::main]
