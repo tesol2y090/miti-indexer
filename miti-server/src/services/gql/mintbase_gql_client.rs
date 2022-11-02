@@ -10,26 +10,26 @@ type timestamp = String;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    query_path = "src/services/gql/get_sale_volume.graphql",
+    query_path = "src/services/gql/get_nft_activities.graphql",
     schema_path = "src/services/gql/schema.json",
     response_derives = "Debug"
 )]
-pub struct GetSaleVolume;
+pub struct GetNFTActivities;
 
 #[derive(Serialize)]
 pub struct Volume {
-    volume: f64,
-    start_timestamp: String,
+    pub volume: f64,
+    pub start_timestamp: String,
 }
 
-pub async fn get_sale_volume(date: String, kind: String) -> Result<Volume, Box<dyn Error>> {
+pub async fn get_nft_activities(date: String, kind: String) -> Result<Volume, Box<dyn Error>> {
     let start_timestamp = date.to_owned();
-    let variables = get_sale_volume::Variables {
+    let variables = get_nft_activities::Variables {
         date,
         kind: Some(kind),
     };
 
-    let request_body = GetSaleVolume::build_query(variables);
+    let request_body = GetNFTActivities::build_query(variables);
 
     let client = reqwest::Client::new();
     let res = client
@@ -37,9 +37,12 @@ pub async fn get_sale_volume(date: String, kind: String) -> Result<Volume, Box<d
         .json(&request_body)
         .send()
         .await?;
-    let response_body: Response<get_sale_volume::ResponseData> = res.json().await?;
-    let response_volume = response_body.data.unwrap();
-    let aggregate_data = response_volume.nft_activities_aggregate.aggregate.unwrap();
+    let response_body: Response<get_nft_activities::ResponseData> = res.json().await?;
+    let response_activities = response_body.data.unwrap();
+    let aggregate_data = response_activities
+        .nft_activities_aggregate
+        .aggregate
+        .unwrap();
     let aggregate_data_sum = aggregate_data.sum.unwrap();
     let volume_price = aggregate_data_sum.price.unwrap();
     Ok(Volume {

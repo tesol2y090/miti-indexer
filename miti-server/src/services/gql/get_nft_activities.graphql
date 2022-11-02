@@ -1,0 +1,22 @@
+query GetNFTActivities($date: timestamp!, $kind: String) {
+  nft_activities_aggregate(
+    where: { timestamp: { _gte: $date }, kind: { _eq: $kind } }
+  ) {
+    aggregate {
+      sum {
+        price
+      }
+      count
+    }
+    nodes {
+      nft_contract_id
+      action_receiver
+      action_sender
+      price
+      timestamp
+      tx_sender
+      receipt_id
+      token_id
+    }
+  }
+}
