@@ -3,8 +3,9 @@ use actix_web::{App, HttpServer};
 
 mod controllers;
 mod services;
+mod utils;
 
-use crate::controllers::get_volume::get_volume;
+use crate::controllers::get_market_data::get_market_data;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -13,7 +14,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(Cors::permissive().allow_any_origin())
-            .service(get_volume)
+            .service(get_market_data)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
