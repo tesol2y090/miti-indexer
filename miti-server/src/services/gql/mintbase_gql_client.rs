@@ -85,7 +85,7 @@ pub async fn get_nft_activities(
         activities_by_date_vec.push(activities_by_date);
     }
 
-    // TODO: sort activities_by_date by date
+    activities_by_date_vec.sort_by_key(|a| a.date.to_owned());
 
     let aggregate_data_sum = aggregate_data.sum.unwrap();
     let aggregate_data_count = aggregate_data.count;
